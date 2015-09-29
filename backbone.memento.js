@@ -10,13 +10,13 @@ http://github.com/derickbailey/backbone.memento
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['backbone', 'underscore'], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('backbone'), require('underscore'));
+    define(['underscore', 'backbone'], factory);
+  } else if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('underscore'), require('backbone'));
   } else {
-    factory(root.Backbone, root._);
+    root.Backbone.Memento = factory(root._, root.Backbone);
   }
-}(this, function (Backbone, _) {
+}(this, function (_, Backbone) {
 
   'use strict';
 
