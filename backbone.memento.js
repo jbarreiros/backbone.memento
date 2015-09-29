@@ -1,3 +1,5 @@
+/* globals define, module, require */
+
 /*!
 Backbone.Memento v0.4.2
 
@@ -74,7 +76,9 @@ http://github.com/derickbailey/backbone.memento
 
     function dropIgnored(attrs, restoreConfig){
       attrs = _.clone(attrs);
-      if (restoreConfig.hasOwnProperty('ignore') && restoreConfig.ignore.length > 0){
+      if (restoreConfig.hasOwnProperty('ignore') &&
+          restoreConfig.ignore.length > 0
+      ){
         for(var index in restoreConfig.ignore){
           var ignore = restoreConfig.ignore[index];
           delete attrs[ignore];
