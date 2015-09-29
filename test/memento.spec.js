@@ -79,5 +79,24 @@ describe("memento", function(){
       expect(changed).to.be.ok;
     });
   });
-  
+
+  describe("when mementoing a model", function() {
+    it("should get all attributes when querying previous state", function() {
+      this.model.set({foo: "bar"});
+      this.model.store();
+      this.model.set({bar: "baz"});
+      this.model.store();
+      expect(this.model.previousState()).to.deep.equal({
+        foo: "bar",
+        bar: "baz"
+      });
+    });
+
+    it("should provide attributes changes since last memento", function() {
+      this.model.set({foo: "bar", alpha: "1"});
+      this.model.store();
+      this.model.set({foo: "baz"});
+      expect(this.model.changes()).to.deep.equal({foo: "baz"});
+    });
+  });
 });

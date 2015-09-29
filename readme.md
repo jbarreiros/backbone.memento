@@ -235,9 +235,16 @@ myModel.get("bar"); // => undefined, as the attribute does not exist
 
 ## v0.4.2
 
-* Setup library as an NPM package
-* Tests are now run with Mocha and Chai (instead of Jasmine)
-* Added [UMD returnExports](https://github.com/umdjs/umd) wrapper
+* via github.com/stayradiated
+  * Setup library as an NPM package
+  * Tests are now run with Mocha and Chai (instead of Jasmine)
+  * Added [UMD returnExports](https://github.com/umdjs/umd) wrapper
+  * Removed jQuery as a dependency
+* via github.com/boskee
+  * Added public method changes(), which compares the current state to the previous state
+  * Added public method previousState(), which returns the previous state's attributes
+* Updated Backbone to v1.2.*
+* Updated Underscore to v1.8.*
 
 ## v0.4.1a
 
