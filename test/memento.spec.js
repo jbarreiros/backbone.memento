@@ -98,5 +98,12 @@ describe("memento", function(){
       this.model.set({foo: "baz"});
       expect(this.model.changes()).to.deep.equal({foo: "baz"});
     });
+
+    it("should provide attributes changes since last memento (2)", function() {
+      this.model.set({alpha: "1"});
+      this.model.store();
+      this.model.set({foo: "baz"});
+      expect(this.model.changes()).to.deep.equal({foo: "baz"});
+    });
   });
 });
