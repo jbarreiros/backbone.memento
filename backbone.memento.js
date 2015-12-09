@@ -221,17 +221,15 @@ http://github.com/derickbailey/backbone.memento
         }
 
         var diff = {};
+        var value;
+        var value2;
         for (var key in obj1) {
           if (_.isFunction(obj1[key])) {
             continue;
           }
 
-          var value2;
-          if ('undefined' != typeof(obj2[key])) {
-            value2 = obj2[key];
-          }
-
-          var value = this.map(value2, obj1[key]);
+          value2 = obj2[key];
+          value = this.map(value2, obj1[key]);
 
           if (value !== undefined) {
             diff[key] = value;
