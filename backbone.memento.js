@@ -220,7 +220,7 @@ http://github.com/derickbailey/backbone.memento
           }
         }
 
-        var diff = {};
+        var diff;
         var value;
         var value2;
         for (var key in obj1) {
@@ -232,6 +232,7 @@ http://github.com/derickbailey/backbone.memento
           value = this.map(value2, obj1[key]);
 
           if (value !== undefined) {
+            diff = {};
             diff[key] = value;
           }
         }
