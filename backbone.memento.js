@@ -58,14 +58,21 @@ http://github.com/derickbailey/backbone.memento
       restoreState(previousState, restoreConfig);
     };
 
+    /**
+     * Returns an object with the attributes that have been added or changed
+     * since the last memento. Additionally, if an attribute that existed in
+     * the last memento is not in the current set, it is also included, but has
+     * a value of "undefined".
+     *
+     * @return {Object}
+     */
     this.changes = function() {
       var currentState = serializer.serialize();
-      var previousState;
+      var differ;
 
       if (mementoStack.size() > 0) {
-        previousState = this.previousState();
-
-        return deepDiffMapper.map(currentState, previousState);
+        differ = new Differ(this.previousState(), currentState);
+        return differ.diff();
       }
 
       return currentState;
@@ -199,66 +206,32 @@ http://github.com/derickbailey/backbone.memento
     initialize();
   };
 
-  var deepDiffMapper = function() {
-    return {
-      VALUE_CREATED: 'created',
-      VALUE_UPDATED: 'updated',
-      VALUE_DELETED: 'deleted',
-      VALUE_UNCHANGED: 'unchanged',
+  var Differ = function(previous, current) {
+    this.previous = previous;
+    this.current = current;
 
-      map: function(obj1, obj2) {
-        if (_.isFunction(obj1) || _.isFunction(obj2)) {
-          throw 'Invalid argument. Function given, object expected.';
-        }
-        if (this.isValue(obj1) || this.isValue(obj2)) {
-          var result = {type: this.compareValues(obj1, obj2), data: obj2 || obj1};
+    this.diff = function() {
+      var self = this;
+      var merged = _.extend({}, this.previous, this.current);
+      var changed = {};
 
-          if (result.type == this.VALUE_CREATED || result.type == this.VALUE_UPDATED) {
-            return result.data;
-          } else {
-            return undefined;
-          }
+      // first, check for additions and changes
+      _.each(this.current, function(value, key) {
+        if (!_.isEqual(self.previous[key], value)) {
+          changed[key] = value;
         }
 
-        var diff;
-        var value;
-        var value2;
-        for (var key in obj1) {
-          if (_.isFunction(obj1[key])) {
-            continue;
-          }
+        delete merged[key];
+      });
 
-          value2 = obj2[key];
-          value = this.map(value2, obj1[key]);
+      // check for deletions
+      _.each(merged, function(value, key) {
+        changed[key] = undefined;
+      });
 
-          if (value !== undefined) {
-            diff = {};
-            diff[key] = value;
-          }
-        }
-
-        return diff;
-      },
-
-      compareValues: function(value1, value2) {
-        if (value1 === value2) {
-          return this.VALUE_UNCHANGED;
-        }
-        if ('undefined' == typeof(value1)) {
-          return this.VALUE_CREATED;
-        }
-        if ('undefined' == typeof(value2)) {
-          return this.VALUE_DELETED;
-        }
-
-        return this.VALUE_UPDATED;
-      },
-
-      isValue: function(obj) {
-        return !_.isObject(obj) && !_.isArray(obj);
-      }
+      return changed;
     };
-  }();
+  };
 
   Backbone.Memento = Memento;
   return Memento;
