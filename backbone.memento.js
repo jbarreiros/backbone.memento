@@ -83,13 +83,17 @@ http://github.com/derickbailey/backbone.memento
   // TypeHelper: a consistent API for removing attributes and
   // restoring attributes, on models and collections
   // ----------------------------
-  var TypeHelper = function(structure) {
+  var TypeHelper = function(structure, config) {
     if (structure instanceof Backbone.Model) {
       this.removeAttr = function(data) {
         structure.unset(data);
       };
       this.restore = function(data) {
-        structure.set(data);
+        if (config && config.parse === true) {
+          structure.set(structure.parse(data));
+        } else {
+          structure.set(data);
+        }
       };
     } else {
       this.removeAttr = function(data) {
@@ -105,7 +109,7 @@ http://github.com/derickbailey/backbone.memento
   // Serializer: serializer and deserialize model and collection state
   // ----------------------------
   var Serializer = function(structure, config) {
-    var typeHelper = new TypeHelper(structure);
+    var typeHelper = new TypeHelper(structure, config);
 
     function dropIgnored(attrs, restoreConfig) {
       attrs = _.clone(attrs);
